@@ -9,35 +9,32 @@ public class Score {
 			int nextFirst, int nextSecond,
 			int nextNextFirst) {
 		//ストライク、スペア、その他の順番で振り分けていく
-		//targetフレームがストライク
-		if(targetFirst == Static.STRIKE_SCORE){
-			//nextフレームがストライク
-			if(nextFirst == Static.STRIKE_SCORE){
-				return targetFirst + nextFirst + nextNextFirst;
+		if(isStrike(targetFirst)){
+			if(isStrike(nextFirst)){
+				return calcFrameScore(targetFirst, nextFirst, nextNextFirst);
 			}
-			return targetFirst + nextFirst + nextSecond;
+			return calcFrameScore(targetFirst, nextFirst, nextSecond);
 		}
-		//targetフレームがスペア
-		if(targetFirst + targetSecond == Static.SPARE_SCORE){
-			return targetFirst + targetSecond + nextFirst;
+		if(isSpare(targetFirst, targetSecond)){
+			return calcFrameScore(targetFirst, targetSecond, nextFirst);
 		}
-		return targetFirst + targetSecond;
+		return calcFrameScore(targetFirst, targetSecond);
 	}
 	
 	//9フレーム用のスコアを計算する
 	public Integer calcFrame9(int targetFirst, int targetSecond, int nextFirst, int nextSecond) {
-		if(targetFirst == Static.STRIKE_SCORE){
-			return targetFirst + nextFirst + nextSecond;
+		if(isStrike(targetFirst)){
+			return calcFrameScore(targetFirst, nextFirst, nextSecond);
 		}
-		if(targetFirst + targetSecond == Static.SPARE_SCORE){
-			return targetFirst + targetSecond + nextFirst;
+		if(isSpare(targetFirst, targetSecond)){
+			return calcFrameScore(targetFirst, targetSecond, nextFirst);
 		}
 		return targetFirst + targetSecond;
 	}
 	
 	//10フレーム用のスコアを計算する
 	public Integer calcFrame10(int targetFirst, int targetSecond, int targetThird) {
-		return targetFirst + targetSecond + targetThird;
+		return calcFrameScore(targetFirst, targetSecond, targetThird);
 	}
 
 	//char型で表されたゲームのスコアをint型に変換する
@@ -113,5 +110,20 @@ public class Score {
 			}
 		}
 		return intFrameScore;
+	}
+	private Integer calcFrameScore(int firstThrow, int secondThrow) {
+		return calcFrameScore(firstThrow, secondThrow, 0);
+	}
+
+	private int calcFrameScore(int firstThrow, int secondThrow, int thirdThrow) {
+		return firstThrow + secondThrow + thirdThrow;
+	}
+
+	private boolean isSpare(int targetFirst, int targetSecond) {
+		return targetFirst + targetSecond == Static.SPARE_SCORE;
+	}
+
+	private boolean isStrike(int targetFirst) {
+		return targetFirst == Static.STRIKE_SCORE;
 	}
 }
