@@ -39,19 +39,19 @@ public class Score {
 
 	//char型で表されたゲームのスコアをint型に変換する
 	public static int[] ConvertCharToIntScore(char[] gameScore) {
-		int[] intScore = new int[Static.MAX_THROW_NUM];
 		if(!(gameScore.length == Static.MAX_THROW_NUM)){
 			return null;
 		}
+		int[] intScore = new int[Static.MAX_THROW_NUM];
 		for(int i = 0; i < gameScore.length; i++){
 			char bitCharScore = gameScore[i];
-			if(Static.FAUL.compareTo(String.valueOf(bitCharScore)) == 0 ||
-				Static.GARTER.compareTo(String.valueOf(bitCharScore)) == 0 ||
-				Static.NON_THROW.compareTo(String.valueOf(bitCharScore)) == 0){
+			if(isFAUL(bitCharScore) ||
+				isGARTER(bitCharScore) ||
+				isNonThrow(bitCharScore)){
 				//ファールかガーターか投げていない場合
 				intScore[i] = Static.GARTER_FAUL_SCORE;
 			}
-			else if(Static.STRIKE.compareTo(String.valueOf(bitCharScore)) == 0){
+			else if(isStrike(bitCharScore)){
 				//ストライクの場合
 				intScore[i] = Static.STRIKE_SCORE;
 			}
@@ -62,6 +62,22 @@ public class Score {
 		return intScore;
 	}
 
+	private static boolean isStrike(char bitCharScore) {
+		return Static.STRIKE.compareTo(String.valueOf(bitCharScore)) == 0;
+	}
+
+	private static boolean isNonThrow(char bitCharScore) {
+		return Static.NON_THROW.compareTo(String.valueOf(bitCharScore)) == 0;
+	}
+
+	private static boolean isGARTER(char bitCharScore) {
+		return Static.GARTER.compareTo(String.valueOf(bitCharScore)) == 0;
+	}
+
+	private static boolean isFAUL(char bitCharScore) {
+		return Static.FAUL.compareTo(String.valueOf(bitCharScore)) == 0;
+	}
+
 	//ゲームスコアから各フレームのスコアを計算する
 	public static int[] calc(char[] gameScore) {
 		//入力を数値に置き換え
@@ -70,7 +86,7 @@ public class Score {
 		int[] intFrameScore = new int[Static.LAST_FRAME_NUM];
 		Score score = new Score();
 		for(int frameNum = Static.FIRST_FRAME_NUM; frameNum <= Static.LAST_FRAME_NUM; frameNum++){
-			//求めるフレームまでに、スコアがいくつ着いているかを現す
+			//求めるフレームまでに、スコアがいくつついているかを現す
 			int alreadyThrowNum = (frameNum - 1) * 2;
 			switch(frameNum){
 			case 10 :
